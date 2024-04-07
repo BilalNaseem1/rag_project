@@ -1,2 +1,9 @@
 langchain-cli[serve]
 langserve[all]
+langchain
+pandas
+pymongo
+google-api-python-client
+python-dotenv
+youtube-transcript-api
+pytube
