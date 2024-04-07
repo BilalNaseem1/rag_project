@@ -7,3 +7,6 @@ google-api-python-client
 python-dotenv
 youtube-transcript-api
 pytube
+octoai-sdk
+openai
+together
