@@ -10,3 +10,15 @@ pytube
 octoai-sdk
 openai
 together
+huggingface_hub
+tiktoken
+langchain-together
+langchain-anthropic
+langchain_experimental
+langsmith
+langchain-core
+langgraph
+langchain-community
+langchainhub
+grandalf
+anthropic
