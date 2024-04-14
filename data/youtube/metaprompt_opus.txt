@@ -1,0 +1,43 @@
+Here are the instructions for the AI assistant to follow to complete the task of generating a detailed summary of a YouTube video transcript focused on cryptocurrencies:
+
+<Inputs>
+{$VIDEO_TRANSCRIPT}
+</Inputs>
+
+<Instructions Structure>
+- Provide the video transcript in a <transcript> tag
+- Instruct the AI to carefully read through the transcript 
+- Ask the AI to write a detailed summary of the key points in the video, focusing especially on any financial advice given and the reasoning behind it
+- Tell the AI to list out all named entities and cryptocurrencies mentioned in the transcript
+- Have the AI assess the overall sentiment (bullish/bearish) of the video
+- If the video contains a tutorial, ask the AI to outline the steps
+- Specify the output format, with the summary in <summary> tags, entities in <entities> tags, sentiment in <sentiment> tags, and tutorial steps if applicable in <tutorial_steps> tags
+</Instructions Structure>
+
+<Instructions>
+Here is the transcript of a YouTube video about cryptocurrencies:
+
+<transcript>
+{$VIDEO_TRANSCRIPT}
+</transcript>
+
+Please read through the transcript carefully. Then, provide the following:
+
+<summary>
+Write a detailed summary of the key points made in the video. Focus especially on capturing any financial advice or recommendations given, along with the reasoning and evidence provided to support that advice. The summary should be at least 5 paragraphs long to ensure it is sufficiently comprehensive.
+</summary>
+
+<entities>
+List out all named entities (people, places, companies, etc.) mentioned in the video. Also list out any specific cryptocurrencies that are discussed. Format the lists with one item per line.
+</entities>
+
+<sentiment>
+Analyze the overall sentiment of the video. Does the presenter seem bullish (optimistic) or bearish (pessimistic) on cryptocurrencies in general and on any specific coins? Explain your reasoning, citing specific statements from the transcript as evidence.
+</sentiment>
+
+<tutorial_steps>
+If the video contains a tutorial (for example, how to buy a certain cryptocurrency), please summarize the steps involved. Write out each step on its own line. If there is no tutorial, you can omit this section.
+</tutorial_steps>
+
+Remember, the key is to produce a comprehensive yet concise overview of the most important and actionable information from the video. Let me know if you have any other questions!
+</Instructions>

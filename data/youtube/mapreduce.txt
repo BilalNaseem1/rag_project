@@ -1,0 +1,100 @@
+### MAP REDUCE
+
+from langchain.chains.combine_documents.stuff import StuffDocumentsChain
+from langchain.chains import MapReduceDocumentsChain, ReduceDocumentsChain
+
+map_template = """
+<Task>
+Generate a highly detailed summary of a YouTube video transcript focused on cryptocurrencies.
+</Task>
+<Inputs>
+{texts}
+</Inputs>
+<Instructions>
+You will be creating a detailed summary of a YouTube video transcript centered on cryptocurrencies.
+
+Here are the steps you should follow:
+- Read the provided YouTube video transcript thoroughly.
+- Extract any financial advice mentioned in the transcript, along with the reasoning behind it.
+- Identify and list all named entities and cryptocurrencies mentioned in the transcript.
+- Assess the overall sentiment of the transcript and determine whether it is bullish or bearish.
+- If the video includes a tutorial, outline the steps described by the YouTuber.
+
+After analyzing the transcript, organize your findings into a detailed summary, ensuring to include all extracted information and observations.
+
+
+</Instructions>
+"""
+map_prompt = PromptTemplate.from_template(map_template)
+map_chain = LLMChain(llm=llm, prompt=map_prompt)
+
+reduce_template = """
+<Task>
+Consolidate detailed summaries of YouTube video transcripts focused on cryptocurrencies.
+</Task>
+<Inputs>
+{texts}
+</Inputs>
+<Instructions>
+You will be consolidating detailed summaries of YouTube video transcripts focused on cryptocurrencies.
+
+Here's what you need to do:
+- Review the detailed summaries generated from individual transcripts.
+- Consolidate any financial advice mentioned, along with the reasoning behind it, from all transcripts.
+- Compile a comprehensive list of all named entities and cryptocurrencies mentioned across all transcripts.
+- Evaluate the overall sentiment by analyzing the sentiment of each transcript and summarizing it as bullish or bearish.
+- Integrate any tutorial steps described by the YouTubers into the consolidated summary, if applicable.
+
+Once you've gathered and analyzed the information from all transcripts, synthesize a consolidated, highly detailed summary encompassing all key findings and observations.
+
+
+</Instructions>
+"""
+reduce_prompt = PromptTemplate.from_template(reduce_template)
+reduce_chain = LLMChain(llm=llm, prompt=reduce_prompt)
+
+combine_documents_chain = StuffDocumentsChain(
+    llm_chain=reduce_chain, document_variable_name="texts"
+)
+
+# Combines and iteratively reduces the mapped documents
+reduce_documents_chain = ReduceDocumentsChain(
+    # This is final chain that is called.
+    combine_documents_chain=combine_documents_chain,
+    # If documents exceed context for `StuffDocumentsChain`
+    collapse_documents_chain=combine_documents_chain,
+    # The maximum number of tokens to group documents into.
+    token_max=4000,
+)
+
+
+# Combining documents by mapping a chain over them, then combining results
+map_reduce_chain = MapReduceDocumentsChain(
+    # Map chain
+    llm_chain=map_chain,
+    # Reduce chain
+    reduce_documents_chain=reduce_documents_chain,
+    # The variable name in the llm_chain to put the documents in
+    document_variable_name="texts",
+    # Return the results of the map steps in the output
+    return_intermediate_steps=False,
+)
+
+
+
+
+############
+j = 0
+l = 0
+for t in texts:
+    content = t.page_content  # Access the 'page_content' attribute of the Document object
+    print(content)  # Print the content of the document
+    j += 1  # Increment document counter
+    l += len(content)  # Add the length of the content to the total length
+
+print(f"count: {j}")
+print(l)
+############
+
+print(map_reduce_chain.run(texts))
+

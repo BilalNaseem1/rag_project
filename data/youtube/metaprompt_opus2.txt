@@ -1,0 +1,46 @@
+Here is the detailed metaprompt for generating a summary of a YouTube video transcript focused on cryptocurrencies:
+
+<Inputs>
+{$VIDEO_TRANSCRIPT}
+</Inputs>
+
+<Instructions Structure>
+- Provide the video transcript in XML tags at the beginning
+- Instruct the AI to carefully read through the entire transcript 
+- Ask the AI to write out its initial thoughts and reactions to the transcript in <thoughts> tags
+- Tell the AI to generate a detailed summary of the key points in the video, focusing especially on:
+  - Any financial advice given and the reasoning behind it
+  - A list of all named entities and cryptocurrencies mentioned
+  - An assessment of the overall sentiment (bullish or bearish)
+  - If applicable, an outline of any tutorial steps described by the YouTuber
+- Specify that the summary should be written in <summary> tags
+- If the video does not contain substantive content about cryptocurrencies, have the AI say so
+</Instructions Structure>
+
+<Instructions>
+Here is the transcript of a YouTube video about cryptocurrencies:
+
+<transcript>
+{$VIDEO_TRANSCRIPT}
+</transcript>
+
+Please read through the entire video transcript carefully. Write out your initial thoughts and reactions to the content in <thoughts> tags before proceeding.
+
+<thoughts>
+</thoughts>
+
+Now, please generate a detailed summary of the key points made in the video. Focus especially on capturing the following:
+
+- Any financial advice or recommendations given about investing in cryptocurrencies. Be sure to include the YouTuber's reasoning and justification for their advice. 
+- A list of all specific cryptocurrencies and other named entities (people, companies, etc.) that are mentioned in the video.
+- Your assessment of the overall sentiment of the video - does the YouTuber seem bullish (optimistic) or bearish (pessimistic) about the crypto market and why?
+- If the video contains any kind of tutorial or how-to guide, please outline the key steps described by the YouTuber.
+
+If the video does not actually contain much substantive information or discussion about cryptocurrencies, please just state "This video does not appear to contain significant content about cryptocurrencies."
+
+Write your complete summary inside <summary> tags.
+
+<summary>
+</summary>
+
+</Instructions>
