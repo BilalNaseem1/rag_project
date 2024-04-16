@@ -28,7 +28,7 @@ Write a detailed summary of the key points made in the video. Focus especially o
 </summary>
 
 <entities>
-List out all named entities (people, places, companies, etc.) mentioned in the video. Also list out any specific cryptocurrencies that are discussed. Format the lists with one item per line.
+List out all named entities (people, coins, places, companies etc.) mentioned in the video. Also list out any specific cryptocurrencies that are discussed. Format the lists with one item per line.
 </entities>
 
 <sentiment>
