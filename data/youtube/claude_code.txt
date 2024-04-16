@@ -1,0 +1,22 @@
+import anthropic
+
+load_dotenv()
+MODEL_NAME = "claude-3-haiku-20240307"
+client = anthropic.Client(api_key= os.environ.get('ANTHROPIC_API_KEY'))
+
+
+response = client.messages.create(
+    model = MODEL_NAME,
+    system="Respond only in Spanish.", # <-- system prompt
+    # api_key= os.environ.get('ANTHROPIC_API_KEY'),
+    messages=[
+        {
+            "role": "user", 
+            "content": "Hello, Claude!"
+            } # <-- user prompt
+    ],
+    # stream=True,
+    temperature=0.01, # This parameter controls the "creativity" or "randomness" of the model's text generation.
+    max_tokens=80,
+    top_p=0.9
+)
