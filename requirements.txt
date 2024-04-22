@@ -24,3 +24,5 @@ grandalf
 anthropic
 seaborn
 transformers
+httpx
+pinecone-client
