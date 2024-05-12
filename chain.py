@@ -67,7 +67,7 @@ def embed_text(text):
 #     document_texts = [doc["Transcript"] for doc in documents]
 #     return document_texts
 
-llm = ChatAnthropic(temperature=0, max_tokens=4000, model_name="claude-3-haiku-20240307", anthropic_api_key="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")
+llm = ChatAnthropic(temperature=0, max_tokens=4000, model_name="claude-3-haiku-20240307", anthropic_api_key="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")
 
 
 # Generate alternative questions
@@ -222,7 +222,7 @@ from langchain_core.prompts import ChatMessagePromptTemplate, MessagesPlaceholde
 generation_prompt = ChatPromptTemplate.from_messages(
     [
         ("system", "You are an expert financial research assistant."),
-        MessagesPlaceholder(variable_name="history")
+        # MessagesPlaceholder(variable_name="history")
         ("human", """
         Please answer the following query based on the provided context. Please cite your resources at the end of your responses.
 
@@ -236,22 +236,22 @@ generation_prompt = ChatPromptTemplate.from_messages(
 )
 
 
-# chain3 = (
-#     chain2
-#     | RunnableParallel({"context": RunnableLambda(chainrank), "question": RunnablePassthrough()})
-#     | generation_prompt
-#     | llm
-# )
-memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=1000)  
-
-chain3 = ConversationChain(
-    llm=llm,
-    memory=memory,
-    prompt=generation_prompt,
-    input_key="question",
-    output_key="answer",
-    verbose=True,
+chain3 = (
+    chain2
+    | RunnableParallel({"context": RunnableLambda(chainrank), "question": RunnablePassthrough()})
+    | generation_prompt
+    | llm
 )
+# memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=1000)  
+
+# chain3 = ConversationChain(
+#     llm=llm,
+#     memory=memory,
+#     prompt=generation_prompt,
+#     input_key="question",
+#     output_key="answer",
+#     verbose=True,
+# )
 
 # x = chain3.invoke("How is btc performing?")
 # print(x)
