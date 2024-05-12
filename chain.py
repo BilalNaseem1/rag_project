@@ -17,28 +17,6 @@ from langchain.chains import LLMChain
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain.chains import ConversationChain
 
-#--- Setting up MongoDb and Pinecone ---#
-
-# import certifi
-# ca = certifi.where()
-
-# client = pymongo.MongoClient(
-# "mongodb+srv://bilalnaseem:PIFks9OWxElsOjl3@textproject.aqw6crm.mongodb.net/xyzdb?retryWrites=true&w=majority", tlsCAFile=ca)
-
-client = MongoClient("mongodb+srv://bilalnaseem:PIFks9OWxElsOjl3@textproject.aqw6crm.mongodb.net/")
-db = client.TextProject
-collection = db.transcripts
-embeddings = CohereEmbeddings(model="embed-english-v3.0", cohere_api_key="kyIT3CZ30dCn6RJpIkmHB5EXnv53O92LAKIr7h66")
-vectorstore = Pinecone.from_existing_index(index_name="benjamin-cowen-summ3", embedding=embeddings)
-co = cohere.Client("kyIT3CZ30dCn6RJpIkmHB5EXnv53O92LAKIr7h66")
-
-
-from pinecone import ServerlessSpec, PodSpec, Pinecone
-spec = ServerlessSpec(cloud='aws', region='us-west-2')
-api_key = "805b93a4-7e60-47df-9184-537be20493ce"
-# configuring client
-pc = Pinecone(api_key=api_key)
-index = pc.Index("benjamin-cowen-summ3")
 
 #--- Setting up LangSmith ---#
 
@@ -48,8 +26,35 @@ os.environ["LANGCHAIN_API_KEY"] = str(os.getenv("LANGCHAIN_API_KEY"))
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 os.environ["LANGCHAIN_PROJECT"] = "text-analytics-project"
+load_dotenv()
+ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
+MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
+COHERE_API_KEY = os.environ.get('COHERE_API_KEY')
+PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
 
-# os.environ['OPENAI_API_KEY'] = str(os.getenv("OPENAI_API_KEY"))
+
+#--- Setting up MongoDb and Pinecone ---#
+
+# import certifi
+# ca = certifi.where()
+
+# client = pymongo.MongoClient(
+# "mongodb+srv://bilalnaseem:PIFks9OWxElsOjl3@textproject.aqw6crm.mongodb.net/xyzdb?retryWrites=true&w=majority", tlsCAFile=ca)
+
+client = MongoClient(MONGO_CLIENT)
+db = client.TextProject
+collection = db.transcripts
+embeddings = CohereEmbeddings(model="embed-english-v3.0", cohere_api_key=COHERE_API_KEY)
+vectorstore = Pinecone.from_existing_index(index_name="benjamin-cowen-summ3", embedding=embeddings)
+co = cohere.Client(COHERE_API_KEY)
+
+
+from pinecone import ServerlessSpec, PodSpec, Pinecone
+spec = ServerlessSpec(cloud='aws', region='us-west-2')
+
+# configuring client
+pc = Pinecone(api_key=PINECONE_API_KEY)
+index = pc.Index("benjamin-cowen-summ3")
 
 # Embedding
 
@@ -67,7 +72,7 @@ def embed_text(text):
 #     document_texts = [doc["Transcript"] for doc in documents]
 #     return document_texts
 
-llm = ChatAnthropic(temperature=0, max_tokens=4000, model_name="claude-3-haiku-20240307", anthropic_api_key="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")
+llm = ChatAnthropic(temperature=0, max_tokens=4000, model_name="claude-3-haiku-20240307", anthropic_api_key=ANTHROPIC_API_KEY)
 
 
 # Generate alternative questions
@@ -435,7 +440,8 @@ chain5 = (
 )
 # x = chain5.invoke("What is the price to tvl ratio of polkadot?")
 # x = chain5.invoke("What is the price to tvl ratio of ethereum?")
-x = chain5.invoke("How is BTC going to perform after halving?")
+# x = chain5.invoke("How is BTC going to perform after halving?")
+x = chain5.invoke("Is it better to hold cardano or btc in bear market?")
 print(x)
 
 
