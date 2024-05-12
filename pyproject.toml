@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "rag_project"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [
+    { include = "app" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+uvicorn = "^0.23.2"
+langserve = {extras = ["server"], version = ">=0.0.30"}
+pydantic = "<2"
+pinecone-client = "3.0.0.dev8"
+langchain-community = "^0.0.37"
+cohere = "^5.3.3"
+openai = "^1.23.6"
+jupyter = "^1.0.0"
+python-dotenv = "^1.0.1"
+langchain-core = "^0.1.52"
+langchain-anthropic = "^0.1.11"
+langchain-exa = "^0.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
