@@ -1,3 +1,4 @@
 __pycache__
 .env
 gbqkey2.json
+secrets.toml

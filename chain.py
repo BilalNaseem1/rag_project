@@ -16,6 +16,7 @@ from langchain.memory import ConversationSummaryMemory, ChatMessageHistory
 from langchain.chains import LLMChain
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain.chains import ConversationChain
+import streamlit as st
 
 
 #--- Setting up LangSmith ---#
@@ -31,6 +32,7 @@ ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
 MONGO_CLIENT = os.environ.get('MONGO_CLIENT')
 COHERE_API_KEY = os.environ.get('COHERE_API_KEY')
 PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
+PINECONE_INDEX_NAME = os.environ.get('PINECONE_INDEX_NAME')
 
 
 #--- Setting up MongoDb and Pinecone ---#
@@ -45,16 +47,17 @@ client = MongoClient(MONGO_CLIENT)
 db = client.TextProject
 collection = db.transcripts
 embeddings = CohereEmbeddings(model="embed-english-v3.0", cohere_api_key=COHERE_API_KEY)
-vectorstore = Pinecone.from_existing_index(index_name="benjamin-cowen-summ3", embedding=embeddings)
+vectorstore = Pinecone.from_existing_index(index_name=PINECONE_INDEX_NAME, embedding=embeddings)
 co = cohere.Client(COHERE_API_KEY)
 
 
 from pinecone import ServerlessSpec, PodSpec, Pinecone
 spec = ServerlessSpec(cloud='aws', region='us-west-2')
 
+index_name = "masterindex2"
 # configuring client
 pc = Pinecone(api_key=PINECONE_API_KEY)
-index = pc.Index("benjamin-cowen-summ3")
+index = pc.Index(index_name)
 
 # Embedding
 
@@ -186,16 +189,6 @@ def search_documents(queries: dict):
 
 co = cohere.Client("kyIT3CZ30dCn6RJpIkmHB5EXnv53O92LAKIr7h66")
 
-def rerank_documents(d1: dict):
-    return co.rerank(
-        query="How is btc performing?",
-        documents=d1["context"],
-        top_n=3,
-        model="rerank-english-v3.0"
-    )
-     
-    
-
 # def rerank_wrapper(input_dict: dict):
 #     return rerank_documents(input_dict["context"], input_dict["question"])
 
@@ -209,7 +202,7 @@ chain2 = (
 def chainrank(dct):
     # x = chain2.invoke(question)
     reranked_results = co.rerank(
-        query=dct['question'],
+        query=dct['question']['question'],  ##################
         documents=dct['context'],
         top_n=3,
         model="rerank-english-v3.0", 
@@ -224,10 +217,11 @@ def chainrank(dct):
 
 from langchain_core.prompts import ChatMessagePromptTemplate, MessagesPlaceholder
 
+# history_placeholder = MessagesPlaceholder("history")
 generation_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "You are an expert financial research assistant."),
-        # MessagesPlaceholder(variable_name="history")
+        ("system", "You are an expert financial research assistant. Answer the user's queries given the context, and also chat history if it's related to the user's question."),
+        # MessagesPlaceholder(variable_name="history"),
         ("human", """
         Please answer the following query based on the provided context. Please cite your resources at the end of your responses.
 
@@ -419,7 +413,7 @@ def handle_query(response):
             result = chain3.invoke(response['question'])
             return result
         elif tool_name == "tabular_data":
-            result = sql_chain.invoke(response['question'])
+            result = sql_chain.invoke(response['question']['question']) #################
             return result
         else:
             fallback_response = cohere_llm.generate([("human", response['question'])])
@@ -441,7 +435,9 @@ chain5 = (
 # x = chain5.invoke("What is the price to tvl ratio of polkadot?")
 # x = chain5.invoke("What is the price to tvl ratio of ethereum?")
 # x = chain5.invoke("How is BTC going to perform after halving?")
-x = chain5.invoke("Is it better to hold cardano or btc in bear market?")
-print(x)
 
-
+# x = chain5.invoke({
+#     "question": "Is it better to hold cardano or btc in bear market?",
+#     "chat_history": 
+# })
+# print(x)

@@ -41,3 +41,4 @@ google-cloud-bigquery[pandas]
 certifi
 streamlit
 discord.py
+trubrics[streamlit]
